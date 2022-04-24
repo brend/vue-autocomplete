@@ -7,6 +7,7 @@
           v-model:selection="selection"
           :items="cities"
           :isLoading="isLoading"
+          placeholder="Begin typing city name"
         ></th-autocomplete>
       </v-col>
     </v-row>
