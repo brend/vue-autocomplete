@@ -25,6 +25,7 @@
 
 <script>
 import ThAutocomplete from './ThAutocomplete.vue';
+import {debounce} from 'lodash';
 
 export default {
   components: { ThAutocomplete },
@@ -38,14 +39,20 @@ export default {
   }),
 
   watch: {
-    search(val) {
-      console.log("loading suggestions for", val);
-      this.isLoading = true;
-      setTimeout(() => {
-        this.cities = [val + "heim", val + "burg", val + "dorf"];
-        this.isLoading = false;
-      }, 500);
+    search(...args) {
+      this.debouncedWatch(...args);
     },
-  }
+  },
+  created() {
+    this.debouncedWatch = debounce((val, oldValue) => {
+      console.log("loading suggestions for", val, oldValue);
+      this.isLoading = true;
+      this.cities = [val + "heim", val + "burg", val + "dorf"];
+      this.isLoading = false;
+    }, 500);
+  },
+  beforeUnmount() {
+    this.debouncedWatch.cancel();
+  },
 }
 </script>
